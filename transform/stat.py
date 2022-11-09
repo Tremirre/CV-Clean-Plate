@@ -34,3 +34,16 @@ def get_normalized_distance_to_vector(
     """
     distances = np.linalg.norm(image.astype(np.float32) - pixel, axis=2)
     return distances / np.max(distances)
+
+
+def create_image_histogram(image: np.ndarray) -> np.ndarray:
+    """
+    Cretes histogram of each color channel of an image.
+
+    :param image: image for which histogram is to be computed
+    :return: histogram of each color channel
+    """
+    histogram = np.zeros((256, 3), dtype=np.uint32)
+    for i in range(3):
+        histogram[:, i] = np.bincount(image[:, :, i].flatten(), minlength=256)
+    return histogram

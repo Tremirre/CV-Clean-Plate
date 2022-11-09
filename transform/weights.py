@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from .stat import create_image_histogram
+
 
 def get_inverse_edge_weight(image: np.ndarray) -> np.ndarray:
     """
@@ -13,19 +15,6 @@ def get_inverse_edge_weight(image: np.ndarray) -> np.ndarray:
     edges = cv2.dilate(edges, np.ones((3, 3)), iterations=1)
     edges = cv2.blur(edges, (3, 3))
     return 1 - edges
-
-
-def create_image_histogram(image: np.ndarray) -> np.ndarray:
-    """
-    Cretes histogram of each color channel of an image.
-
-    :param image: image for which histogram is to be computed
-    :return: histogram of each color channel
-    """
-    histogram = np.zeros((256, 3), dtype=np.uint32)
-    for i in range(3):
-        histogram[:, i] = np.bincount(image[:, :, i].flatten(), minlength=256)
-    return histogram
 
 
 def get_histogram_weight(image: np.ndarray) -> np.ndarray:
