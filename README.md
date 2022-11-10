@@ -1,9 +1,9 @@
 # Computer Vision - Project 1
-Image representation and preprocessing
+Image representation and preprocessing - programmatic photomontage - extracting background from set of images with moving objects
 
 ---
-- Bartosz Stachowiak 148259 
-- Andrzej Kajdasz    148273
+- Bartosz Stachowiak
+- Andrzej Kajdasz
 
 
 
