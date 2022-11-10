@@ -26,16 +26,23 @@ class ImagesPurifier:
     Class for purifying a list of images with predified algorithms.
     """
 
-    def __init__(self, images: list[np.ndarray], use_max_merge: bool = True) -> None:
+    def __init__(
+        self,
+        images: list[np.ndarray],
+        use_max_merge: bool = True,
+        changing_region: np.ndarray = None,
+    ) -> None:
         self.images = images
         self.merge_func = (
             weights.merge_images_by_max_weight
             if use_max_merge
             else weights.merge_images_by_weighted_average
         )
-        self.changing_region = extract_changing_region(
-            images, tolerance=15, erosions=3, dilations=5
-        )
+        self.changing_region = changing_region
+        if changing_region is None:
+            self.changing_region = extract_changing_region(
+                images, tolerance=15, erosions=3, dilations=5
+            )
 
     def merge_on_changing_region(self, image_weights: list[np.ndarray]) -> np.ndarray:
         """

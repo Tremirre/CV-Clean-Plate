@@ -75,10 +75,14 @@ def merge_images_by_weighted_average(
     :param weights: list of corresponding weights
     :return: max merged image
     """
-    weights_stacked = np.dstack(weights)
-    # Normalize weights so that the final sum for each pixel is between 0 and 255
-    weights_norm = weights_stacked / np.atleast_3d(np.sum(weights_stacked, axis=2))
-    weights_destacked = np.array([np.nan_to_num(weights_norm, nan=1)]).swapaxes(0, 3)
-    result = np.sum(np.array(images) * weights_destacked, axis=0).astype(np.uint8)
-
-    return result
+    weights_array = np.array(weights)
+    weights_expanded = np.expand_dims(weights_array, axis=3)
+    weights_broadcasted = np.broadcast_to(weights_expanded, (*weights_array.shape, 3))
+    summed_weights = np.sum(weights_broadcasted, axis=0)
+    result = (
+        np.sum(np.array(images) * weights_broadcasted, axis=0) / summed_weights
+    ).astype(np.uint8)
+    final = np.zeros(result.shape)
+    final[summed_weights == 0] = images[0][summed_weights == 0]
+    final[summed_weights > 0] = result[summed_weights > 0]
+    return final
