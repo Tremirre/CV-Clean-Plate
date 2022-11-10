@@ -4,7 +4,9 @@ import numpy as np
 from . import stat
 
 
-def get_changing_mask(images: list[np.ndarray], tolerance: int = 2) -> np.ndarray:
+def get_changing_mask(
+    images: list[np.ndarray], tolerance: int = 2, bool_mask: bool = True
+) -> np.ndarray:
     """
     Returns a mask of pixels that are changing between images.
 
@@ -16,7 +18,7 @@ def get_changing_mask(images: list[np.ndarray], tolerance: int = 2) -> np.ndarra
     for i, image_a in enumerate(images):
         for _, image_b in enumerate(images[i + 1 :]):
             result += ~np.all(np.isclose(image_a, image_b, atol=tolerance), axis=2)
-    return result > 0
+    return result > 0 if bool_mask else result
 
 
 def get_overly_red_mask(image: np.ndarray, tolerance: int) -> np.ndarray:
